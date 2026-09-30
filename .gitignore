@@ -1,4 +1,6 @@
 track_data.json
 refund_dashboard.html
+monthly_refunds_by_*.csv
+policy_violations.csv
 __pycache__/
 *.pyc

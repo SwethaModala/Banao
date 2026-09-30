@@ -53,13 +53,20 @@ Open it in any browser (Chrome, Edge, Firefox). No internet connection needed.
 ```
 python analyze.py --data-dir /path/to/data    # if data files are elsewhere
 python analyze.py --output board_pack.html     # custom output name
+python analyze.py --export-csv                 # export CSV tables for board pack
 python analyze.py --serve                      # auto-open in browser after generating
 ```
 
 #### Full example
 
 ```bash
-python analyze.py --data-dir . --output refund_dashboard.html --serve
+python analyze.py --data-dir . --output refund_dashboard.html --export-csv --serve
+```
+
+#### Running unit tests
+
+```bash
+python -m unittest test_analyze.py
 ```
 
 ---

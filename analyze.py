@@ -721,11 +721,47 @@ def generate_html(data):
     return HTML_TEMPLATE.replace('__DATA_PLACEHOLDER__', data_json)
 
 
+def export_csvs(data, out_dir='.'):
+    # 1. monthly_by_reason.csv (Pivot format for board pack)
+    reason_file = os.path.join(out_dir, 'monthly_refunds_by_reason.csv')
+    reasons = data.get('all_reasons', [])
+    with open(reason_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        header = ['Month', 'Total Refund INR']
+        for r in reasons:
+            header.extend([f'{r} Count', f'{r} Amount INR'])
+        writer.writerow(header)
+        for row in data['monthly_by_reason']:
+            line = [row['month'], row['total_amount']]
+            for r in reasons:
+                line.extend([row.get(f'{r}_count', 0), row.get(f'{r}_amount', 0.0)])
+            writer.writerow(line)
+
+    # 2. monthly_by_agent.csv
+    agent_file = os.path.join(out_dir, 'monthly_refunds_by_agent.csv')
+    with open(agent_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Month', 'Agent ID', 'Agent Name', 'Team', 'Site', 'Refund Count', 'Total Refund INR', 'GW-OTHER Count', 'GW-OTHER Rate Pct'])
+        for a in data['monthly_by_agent']:
+            writer.writerow([a['month'], a['agent_id'], a['agent_name'], a['team'], a['site'], a['refund_count'], a['refund_amount'], a['gw_other_count'], a['gw_other_rate_pct']])
+
+    # 3. policy_violations.csv
+    flags_file = os.path.join(out_dir, 'policy_violations.csv')
+    with open(flags_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Violation Type', 'Ticket ID', 'Month', 'Agent ID', 'Agent Name', 'Amount INR', 'Excess INR'])
+        for fl in data['flags']:
+            writer.writerow([fl.get('type'), fl.get('ticket_id'), fl.get('month'), fl.get('agent_id'), fl.get('agent_name'), fl.get('amount'), fl.get('excess', 0)])
+
+    print(f"[OK] Exported CSV summaries:\n     - {reason_file}\n     - {agent_file}\n     - {flags_file}")
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='Vireo Audio Refund Analysis Tool')
     parser.add_argument('--data-dir', default='.', help='Directory containing CSV files')
     parser.add_argument('--output', default='refund_dashboard.html', help='Output HTML file')
+    parser.add_argument('--export-csv', action='store_true', help='Export CSV tables for board pack')
     parser.add_argument('--serve', action='store_true', help='Serve in browser after generating')
     args = parser.parse_args()
 
@@ -745,6 +781,9 @@ def main():
     with open(args.output, 'w', encoding='utf-8') as f:
         f.write(html)
     print(f"\n[OK] Dashboard written to: {os.path.abspath(args.output)}")
+
+    if args.export_csv:
+        export_csvs(data, args.data_dir)
 
     if args.serve:
         import webbrowser

@@ -64,7 +64,7 @@ Yes — one clarification, one narrowing, one addition.
 
 2. **Blank agent_id excluded from agent table.** About 3% of refund tickets have no agent_id. They are counted in totals but not attributed. This understates refunds on the agent view.
 
-3. **No automated tests.** The spot-check was manual. There's no test suite.
+3. **Unit test coverage is focused on core invariants.** An automated test suite (`test_analyze.py`) verifies row counts (12,238 raw → 11,600 dedup), legacy /100 conversion, total refund reconciliation (Rs 67,09,932), policy flags, and CSV/HTML output. However, edge-case unit tests for corrupted dates or malformed ticket numbers are not yet implemented.
 
 4. **The HTML dashboard assumes a modern browser.** Tested in Chrome. It uses CSS custom properties and ES6. Will not render correctly in Internet Explorer.
 
