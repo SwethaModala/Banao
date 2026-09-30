@@ -311,12 +311,48 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     /* Chart */
     .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
-    .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 180px; margin-top: 20px; }
-    .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; }
-    .bar-stack { width: 100%; display: flex; flex-direction: column-reverse; cursor: pointer; }
-    .bar-segment { transition: opacity 0.2s; }
-    .bar-segment:hover { opacity: 0.8; }
-    .bar-label { font-size: 0.65rem; color: var(--muted); margin-top: 4px; text-align: center; transform: rotate(-30deg); }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 220px;
+      margin-top: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar-stack {
+      width: 100%;
+      max-width: 34px;
+      display: flex;
+      flex-direction: column-reverse;
+      border-radius: 4px 4px 0 0;
+      overflow: hidden;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .bar-segment {
+      width: 100%;
+      transition: opacity 0.2s;
+    }
+    .bar-segment:hover {
+      opacity: 0.85;
+      filter: brightness(1.2);
+    }
+    .bar-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+      line-height: 1.2;
+    }
 
     .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; }
@@ -525,21 +561,22 @@ function populateMonthDropdowns() {
 
 function renderChart() {
   const mode = document.getElementById('chart-mode').value;
-  const months = DATA.monthly_by_reason.sort((a,b) => a.month.localeCompare(b.month));
+  const months = DATA.monthly_by_reason.slice().sort((a,b) => a.month.localeCompare(b.month));
   const reasons = DATA.all_reasons;
   const maxVal = Math.max(...months.map(m => mode === 'amount' ? m.total_amount : reasons.reduce((s,r) => s + (m[r+'_count']||0), 0)));
 
+  const CHART_PX = 160;
   const chart = document.getElementById('bar-chart');
   chart.innerHTML = months.map(m => {
     const totalVal = mode === 'amount' ? m.total_amount : reasons.reduce((s,r) => s + (m[r+'_count']||0), 0);
     const segments = reasons.map(r => {
       const val = mode === 'amount' ? (m[r+'_amount']||0) : (m[r+'_count']||0);
-      const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
-      return pct > 0 ? `<div class="bar-segment" style="height:${pct}%;background:${REASON_COLORS[r]||'#58a6ff'}" 
-        onmouseenter="showTip(event,'${m.month}<br>${r}: ${mode==='amount'?fmt(val):fmtN(val)}')" onmouseleave="hideTip()"></div>` : '';
+      const hPx = maxVal > 0 ? (val / maxVal * CHART_PX) : 0;
+      return hPx > 0.4 ? `<div class="bar-segment" style="height:${hPx.toFixed(1)}px;background:${REASON_COLORS[r]||'#58a6ff'}" 
+        onmouseenter="showTip(event,'<strong>${m.month}</strong><br><span style=\\'color:${REASON_COLORS[r]||'#58a6ff'}\\'>${r}</span>: ${mode==='amount'?fmt(val):fmtN(val)}<br><span style=\\'color:var(--muted)\\'>Month Total: ${mode==='amount'?fmt(totalVal):fmtN(totalVal)}</span>')" onmouseleave="hideTip()"></div>` : '';
     }).join('');
     return `<div class="bar-group">
-      <div class="bar-stack" style="height:100%" title="${m.month}: ${mode==='amount'?fmt(totalVal):fmtN(totalVal)}">${segments}</div>
+      <div class="bar-stack" title="${m.month}: ${mode==='amount'?fmt(totalVal):fmtN(totalVal)}">${segments}</div>
       <div class="bar-label">${m.month.slice(5)}<br>${m.month.slice(0,4)}</div>
     </div>`;
   }).join('');
