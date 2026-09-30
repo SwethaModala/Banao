@@ -1,0 +1,124 @@
+MEMO
+
+To:      Arjun Mehta, Finance Controller, Vireo Audio
+From:    Modala Sruthi
+Date:    30 September 2026
+Subject: Refund summary — what the data says, and where the money is going
+
+
+WHY YOUR NUMBER WAS WRONG
+
+Your export summed to over a crore a quarter. The helpdesk's own report says
+around Rs 11 lakh. Both are reading the same data.
+
+The legacy Freshdesk system stored refund amounts in its own native unit —
+effectively paise, not rupees. When that data was migrated into the current
+helpdesk, the raw numbers came across unchanged. So every legacy refund
+appears 100 times larger in a raw export than it actually is.
+
+Corrected figure: Rs 67 lakh total over the 18 months Jan 2025 – Jun 2026,
+or roughly Rs 11 lakh per quarter. That matches Sameer's helpdesk figure.
+
+Additionally, 638 tickets were imported twice during the migration. I removed
+the duplicates before counting.
+
+
+WHAT THE 18 MONTHS ACTUALLY LOOK LIKE
+
+Total refunds:            Rs 67,09,932
+Monthly average:          Rs 3,73,000
+Most recent quarter run:  Rs 12,79,823 (Apr–Jun 2026)
+
+Refunds are rising. The quarterly total has roughly doubled from Q1 FY2025
+(Rs 6.1 lakh) to Q2 FY2026 (Rs 12.8 lakh). Priya is right that this tracks
+the Q4 policy change on customer disputes — the trend is visible in the data.
+
+
+WHERE THE MONEY IS GOING — BY REASON CODE
+
+  GW-OTHER (Goodwill / Other)    Rs 29,07,036    43% of total spend
+  RETURN-QC-OK                   Rs 11,81,386    18%
+  DUP-PAYMENT                    Rs  8,84,586    13%
+  CANCEL                         Rs  6,12,950     9%
+  DOA-REPL                       Rs  4,71,190     7%
+  WTY-BUYBACK + others           Rs  6,52,784    10%
+
+GW-OTHER is the single largest line — nearly half the refund budget.
+Sameer flagged this in his note: GW-OTHER is the first item in the agent
+dropdown, and agents default to it. That shows in the data.
+
+
+THE SPECIFIC PROBLEM: POLICY IS NOT BEING ENFORCED
+
+Your own support policy (§5) caps goodwill credits at Rs 500 per ticket and
+requires Team Lead approval for anything over that amount.
+
+Of 991 GW-OTHER refund tickets, 879 exceeded Rs 500.
+Average GW-OTHER refund: Rs 2,933.
+Total paid above the Rs 500 ceiling: Rs 24,32,132 over 18 months.
+That is approximately Rs 4.6 lakh per quarter above the policy limit.
+
+If the cap had been enforced, GW-OTHER spend would have been around
+Rs 5 lakh total, not Rs 29 lakh.
+
+
+WHERE THE MONEY IS GOING — BY AGENT
+
+Returns Desk and Billing process the large majority of refunds, which is
+expected by design — §6 says Returns Desk owns refund processing.
+
+However, the highest GW-OTHER rates (i.e., proportion of refund tickets
+that are coded as goodwill rather than a specific reason) are:
+
+  Reyansh Mishra (Escalations & Warranty):  63% of his refund tickets
+  Steven Ansari (Chat Frontline):            60%
+  Anjali D'Souza (Chat Frontline):           59%
+  Payal Bhatia (Chat Frontline):             55%
+
+A high GW-OTHER rate is not necessarily misconduct. It may mean the agent
+could not find the right code, or the resolution genuinely was goodwill.
+But it does mean these tickets are hard to audit. The flag is for the
+Team Lead to investigate, not Finance to act on directly.
+
+
+THE OTHER FINDING: DOUBLE REMEDIES
+
+Neha mentioned this and she was right. 166 tickets show both a refund raised
+and a replacement issued on the same order. Policy §5 is explicit: a customer
+cannot receive both. These need to be reviewed by the Returns Desk and Finance.
+Total refund value on those 166 tickets: Rs 5,74,191.
+
+
+THE BUSINESS GOAL, AS A NUMBER
+
+Enforce the existing Rs 500 goodwill cap.
+
+Current quarterly GW-OTHER excess above cap: Rs 4.6 lakh
+Realistic target after enforcement: Rs 1.5 lakh/quarter
+Estimated quarterly saving: Rs 3.1 lakh
+Estimated annual saving: Rs 12.4 lakh
+
+No new policy required. The rule is already written. It is not being
+followed, and there is no automated check. A simple approval gate in the
+helpdesk — requiring Team Lead sign-off before a GW-OTHER refund above
+Rs 500 is processed — would capture most of this.
+
+
+WHAT THIS DOES NOT ANSWER
+
+This analysis looks at the financial summary you asked for. It does not:
+- Assess whether individual refund decisions were right or wrong
+- Explain why GW-OTHER grew so sharply in Q4 FY2025 (Priya's team change
+  is the stated reason; the data is consistent with that, but causation
+  would need a separate analysis)
+- Compare Bengaluru vs Indore (the data supports it; I did not build it
+  within the time available)
+
+The full detail — every month, every reason code, every agent — is in the
+accompanying dashboard (refund_dashboard.html). Open it in any browser.
+No installation needed.
+
+
+Arjun, one practical note for the board pack: the correct total to cite is
+Rs 67 lakh over 18 months, or roughly Rs 11 lakh per quarter. The number
+you saw in your export was an artefact of how Freshdesk stored money.
